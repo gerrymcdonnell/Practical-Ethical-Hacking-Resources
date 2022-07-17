@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import sys
 from datetime import datetime as dt
 import socket
@@ -14,14 +12,18 @@ print("Scannning target: " + target)
 print("Time started: " + str(dt.now()))
 print('-' * 50)
 
+
+def scan_all(start,end):
+    for port in range(start,end):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket.setdefaulttimeout(0.25)
+        result = s.connect_ex((target, port))
+        if result == 0:
+            print("port {} is open".format(port))
+        s.close 
+
 try:
-  for port in range(1,65535):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socket.setdefaulttimeout(0.5)
-    result = s.connect_ex((target, port))
-    if result == 0:
-      print("port {} is open".format(port))
-    s.close 
+    scan_all(1,80)
 except KeyboardInterrupt:
   print('\nExitting...')
   sys.exit()
@@ -31,3 +33,4 @@ except socket.gaierror:
 except socket.error:
   print("Couldn't connect to server")
   sys.exit()
+
